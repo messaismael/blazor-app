@@ -5,14 +5,17 @@ namespace BlazorApp
     {
         public string strNum = " 0";
         public string num = " 0";
+        public bool resetStatus = true;
 
         private string strPattern = "\\d{1,}[+÷×-]\\d{1,}";
 
         public void addElement(char el){
             Regex rg = new Regex("(\\d+)$");
-            if(string.Equals(strNum, " 0")){
-                strNum = $" {el}";
-                num = $" {el}";
+
+
+            if(string.Equals(strNum, " 0") || string.Equals(strNum, "0")){
+                strNum = $"{el}";
+                num = $"{el}";
             } 
             else {
                 strNum+=el;
@@ -24,9 +27,11 @@ namespace BlazorApp
                     num= strNum;
                 }
             }
+            isResetable();
+
         }
         public void addOperator(char op){
-
+            
             if(Regex.IsMatch(strNum, strPattern)){
                 strNum = Regex.Replace(strNum,@"[×]", "*");
                 strNum = Regex.Replace(strNum,@"[÷]", "/");
@@ -35,14 +40,16 @@ namespace BlazorApp
             }
             
             if(Regex.IsMatch(strNum, "([×+÷-])$")){
-                    Console.WriteLine("IT'S TRUEE;;;;;");
                     strNum = Regex.Replace(strNum, @"([×+÷-])$", $"{op}");
             } else {
                 strNum+= op;
             }
+            isResetable();
         }
 
         public void percentage () {
+            isResetable();
+
             strNum +="/100";
             strNum = Regex.Replace(strNum,@"[×]", "*");
             strNum = Regex.Replace(strNum,@"[÷]", "/");
@@ -53,16 +60,39 @@ namespace BlazorApp
             num = strNum;
         }
         public void erase(){
+            Regex rg = new Regex("(\\d+)$");
+            if(resetStatus)
+                Console.WriteLine("redet",resetStatus);
+
             if(!strNum.Equals(" 0")) {
-                strNum = Regex.Replace(strNum, @"(\\d[×+.÷-])$", "");
+                strNum = Regex.Replace(strNum, "(\\d{1,1}|[.]{1,1})$", "");
+                Match mt = rg.Match(strNum);
+                if(mt.Success){
+                    num= $"{mt.Value}";
+                }else if(mt.Value.Equals("")){
+                    strNum +=0;
+                    num = " 0";
+                }
+                else{
+                    num= strNum;
+                }
+            }
+        }
+        public void isResetable () {
+            if(Regex.IsMatch(strNum, "([×+÷-]+)$")){
+                resetStatus = true;
+            }else{
+                resetStatus = false;
             }
         }
         public void equalOperator(){
-            if(Regex.IsMatch(strNum, strPattern))
+            resetStatus = true;
+            if(Regex.IsMatch(strNum, strPattern)) {
                 strNum = Regex.Replace(strNum,@"[×]", "*");
                 strNum = Regex.Replace(strNum,@"[÷]", "/");
                 strNum = Convert.ToString(Evaluate(strNum));
                 num = strNum;
+            }
         }
 
         /**

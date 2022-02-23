@@ -10,7 +10,15 @@
       <div class="display"> @CalcObj.num</div>
       <div class="box-container pb-2">
         <div class="row-custom mb-2">
-          <div class="btn-custom light-gray" @onclick="@(CalcObj.reset)">AC</div>
+          @{ 
+            var stat = "AC";
+            if(CalcObj.resetStatus){
+              stat ="AC";
+            }else{
+              stat ="C";
+            }
+          }
+          <div class="btn-custom light-gray" @onclick="@(resetOrErase)">@stat</div>
           <div class="btn-custom light-gray"> +/-</div>
           <div class="btn-custom light-gray" @onclick="@(CalcObj.percentage)">%</div>
           <button class="btn-custom light-orange"  @onclick="@(e => CalcObj.addOperator('÷'))">÷</button>
@@ -44,10 +52,14 @@
 
 </div>
 @code {
+  
   CaculatorOperation CalcObj = new CaculatorOperation();
 
-  void addValue (int el){
-    Console.WriteLine(el);
+  void resetOrErase () {
+    if(CalcObj.resetStatus ){
+      CalcObj.reset();
+    }else{
+      CalcObj.erase();
+    }
   }
-  double operation = 0;
 }
