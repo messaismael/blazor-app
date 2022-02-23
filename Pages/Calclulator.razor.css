@@ -1,10 +1,11 @@
 .maincontainer{
-  text-align: center;
+  text-align: left;
 }
 .main-box{
-  border: 1px solid green;
   margin: auto;
   width: fit-content;
+  border-radius: 15px;
+  overflow: hidden;
 }
 .box-container{
   width: fit-content;
