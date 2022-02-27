@@ -3,8 +3,8 @@ namespace BlazorApp
 {
     public class CaculatorOperation
     {
-        public string strNum = " 0";
-        public string num = " 0";
+        public string strNum = $"{'0'}";
+        public string num = $"{'0'}";
         public bool resetStatus = true;
 
         private string strPattern = "\\d{1,}[+÷×-]\\d{1,}";
@@ -13,7 +13,7 @@ namespace BlazorApp
             Regex rg = new Regex("(\\d+)$");
 
 
-            if(string.Equals(strNum, " 0") || string.Equals(strNum, "0")){
+            if(string.Equals(strNum, "0") || string.Equals(strNum, "0")){
                 strNum = $"{el}";
                 num = $"{el}";
             } 
@@ -32,12 +32,7 @@ namespace BlazorApp
         }
         public void addOperator(char op){
             
-            if(Regex.IsMatch(strNum, strPattern)){
-                strNum = Regex.Replace(strNum,@"[×]", "*");
-                strNum = Regex.Replace(strNum,@"[÷]", "/");
-                strNum = Convert.ToString(Evaluate(strNum));
-                num = strNum;
-            }
+            equalOperator();
             
             if(Regex.IsMatch(strNum, "([×+÷-])$")){
                     strNum = Regex.Replace(strNum, @"([×+÷-])$", $"{op}");
