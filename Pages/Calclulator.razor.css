@@ -13,12 +13,28 @@
   background-color: black;
 }
 .display{
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
   background-color: black;
   color: white;
   text-align: right;
-  font-size: 50px;
+  min-height: 115px;
   padding: 0 3px;
   padding-top: 30px;
+}
+.fBig{
+  font-size: 55px;
+  line-height: 1;
+}
+.fSmall{
+  font-size: 33px;
+  padding-bottom: 5px;
+}
+.display span {
+  align-self: flex-end;
+  justify-content: right;
+  line-height: 1;
 }
 .row-custom{
   display: flex;

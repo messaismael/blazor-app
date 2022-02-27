@@ -11,24 +11,25 @@ namespace BlazorApp
 
     public void addElement(char el)
     {
-
-      if (string.Equals(strNum, "0"))
-      {
-        strNum = $"{el}";
-        num = $"{el}";
-      }
-      else
-      {
-        if (num.Equals("0") || num.Equals("-0"))
-        {
-          strNum = Regex.Replace(strNum, "(0)$", ""); // "3.14+0" to "3.10+"
-        }
-        strNum += el;
-        String mt = getLastEl();
-        num = $"{mt}";
-      }
-      isResetable();
-
+			if(num.Length < 18 || Regex.IsMatch(strNum, "([+÷×-])$"))
+			{
+				if (string.Equals(strNum, "0"))
+				{
+					strNum = $"{el}";
+					num = $"{el}";
+				}
+				else
+				{
+					if (num.Equals("0") || num.Equals("-0"))
+					{
+						strNum = Regex.Replace(strNum, "(0)$", ""); // "3.14+0" to "3.10+"
+					}
+					strNum += el;
+					String mt = getLastEl();
+					num = $"{mt}";
+				}
+				isResetable();
+			}
     }
 
     public void addComma(char el)

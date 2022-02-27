@@ -7,7 +7,15 @@
   <h1>Calclulator</h1>
   <div class="mainbox">
     <div class="main-box">
-      <div class="display"> @CalcObj.num</div>
+      @{
+        var displaySize = "fBig";
+        if(CalcObj.num.Length < 12){
+          displaySize =  "fBig";
+        }else{
+          displaySize = "fSmall";
+        }
+      }
+      <div class="display @displaySize"><span> @CalcObj.num </span></div>
       <div class="box-container pb-2">
         <div class="row-custom mb-2">
           @{ 
