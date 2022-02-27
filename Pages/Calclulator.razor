@@ -19,7 +19,7 @@
             }
           }
           <div class="btn-custom light-gray" @onclick="@(resetOrErase)">@stat</div>
-          <div class="btn-custom light-gray"> +/-</div>
+          <div class="btn-custom light-gray" @onclick="@(CalcObj.addSign)"> +/-</div>
           <div class="btn-custom light-gray" @onclick="@(CalcObj.percentage)">%</div>
           <button class="btn-custom light-orange"  @onclick="@(e => CalcObj.addOperator('÷'))">÷</button>
         </div>
@@ -43,7 +43,7 @@
         </div>
         <div class="row-custom">
           <div class="btn-lg btn-custom" @onclick="@(e => CalcObj.addElement('0'))">0</div>
-          <div class="btn-custom" @onclick="@(e => CalcObj.addElement('.'))">.</div>
+          <div class="btn-custom" @onclick="@(e => CalcObj.addComma('.'))">.</div>
           <div class="btn-custom light-orange" @onclick="@(CalcObj.equalOperator)">=</div>
         </div>
       </div>
