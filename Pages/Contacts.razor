@@ -23,7 +23,7 @@ else{
                     isDisabled = false;
                 }
             }
-            <button class="btn btn-primary" @onclick="@(addContact)" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >Add</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >Add</button>
             <button class="btn btn-info" disabled=@isDisabled >Edit</button>
             <button class="btn btn-danger" disabled=@isDisabled >Delete</button>
         </div>
@@ -51,40 +51,43 @@ else{
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <div class="form-group mb-2">
-                                    <label for="inputEmail4">Nom</label>
-                                    <input type="text" class="form-control" id="inputEmail4" placeholder="Email">
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="inputEmail4">Number</label>
-                                    <input type="number" class="form-control" id="inputEmail4" placeholder="Number">
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="inputPassword4">Email</label>
-                                    <input type="email" class="form-control" id="inputPassword4" placeholder="Password">
-                                </div>
+                    <EditForm Model="@newcontact" OnValidSubmit="@HandleValidSubmit">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                            <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group mb-2">
+                                <label for="name">Name</label>
+                                <InputText id="name" class="form-control" @bind-Value="newcontact.Name" />
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
-                    </div>
+                            <div class="form-group mb-2">
+                                <label for="number">Number</label>
+                                <InputNumber id="number" class="form-control" @bind-Value="newcontact.Number" />
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="email">Email</label>
+                                <InputText id="email" class="form-control" @bind-Value="newcontact.Email" />
+                            </div>
+
+                            <DataAnnotationsValidator />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" @onclick=@addContact class="btn btn-primary"> Save</button>
+                        </div>
+                    </EditForm>
                 </div>
             </div>
         </div>
     </div>
 }
 
+
 @code{
     private List<Contact>? contacts;
+    private Contact newcontact = new Contact("", "");
+        
     private bool @isDisabled = false;
     private Contact? selectedContact;
 
@@ -92,8 +95,16 @@ else{
         selectedContact = cnt;
     }
 
-    void addContact () {
-        ContactService.AddContact(new Contact("alfred", "alfred01@gmail.com"));
+    private void HandleValidSubmit(){
+
+    }
+    private void addContact () {
+        newcontact.Date = DateTime.Now;
+        if(string.IsNullOrEmpty(newcontact.Name)){
+        }else{
+            ContactService.AddContact(newcontact);
+        }
+        newcontact = new Contact("","");
     }
     protected override async Task OnInitializedAsync()
     {
