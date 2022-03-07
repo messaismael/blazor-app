@@ -1,0 +1,12 @@
+
+.action-conatiner{
+    text-align: right;
+}
+
+.selected{
+    background-color: #0f2061;
+    color: white;
+}
+tr:hover{
+    background-color: #0e2262a8;;
+}
