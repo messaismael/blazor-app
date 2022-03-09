@@ -23,9 +23,9 @@ else{
                     isDisabled = false;
                 }
             }
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >Add</button>
-            <button class="btn btn-info" disabled=@isDisabled >Edit</button>
-            <button class="btn btn-danger" disabled=@isDisabled >Delete</button>
+            <button class="btn btn-primary"  @onclick="@openModal">Add</button>
+            <button class="btn btn-info" @onclick="@EdithContact" disabled=@isDisabled >Edit</button>
+            <button class="btn btn-danger" @onclick="@DeleteContact" disabled=@isDisabled >Delete</button>
         </div>
         <table class="table">
             <thead>
@@ -48,38 +48,43 @@ else{
                 }
             </tbody>
         </table>
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <EditForm Model="@newcontact" OnValidSubmit="@HandleValidSubmit">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                            <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group mb-2">
-                                <label for="name">Name</label>
-                                <InputText id="name" class="form-control" @bind-Value="newcontact.Name" />
-                            </div>
-                            <div class="form-group mb-2">
-                                <label for="number">Number</label>
-                                <InputNumber id="number" class="form-control" @bind-Value="newcontact.Number" />
-                            </div>
-                            <div class="form-group mb-2">
-                                <label for="email">Email</label>
-                                <InputText id="email" class="form-control" @bind-Value="newcontact.Email" />
-                            </div>
+        @{
+            if(isOpenModal){
+                <div id="staticBackdrop" class="modal fade @(isOpenModal? "show" : "")" style="background-color: #00000080; display: @(isOpenModal? "block" : "")">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <EditForm Model="@newcontact" OnValidSubmit="@HandleValidSubmit">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                    <button type="reset" class="btn-close" @onclick="@openModal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group mb-2">
+                                        <label for="name">Name</label>
+                                        <InputText id="name" class="form-control" @bind-Value="newcontact.Name" />
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="number">Number</label>
+                                        <InputNumber id="number" class="form-control" @bind-Value="newcontact.Number" />
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="email">Email</label>
+                                        <InputText id="email" class="form-control" @bind-Value="newcontact.Email" />
+                                    </div>
 
-                            <DataAnnotationsValidator />
+                                    <DataAnnotationsValidator />
+                                    <ValidationSummary />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="reset" class="btn btn-secondary" @onclick="@openModal" >Close</button>
+                                    <button type="submit" class="btn btn-primary"> Save</button>
+                                </div>
+                            </EditForm>
                         </div>
-                        <div class="modal-footer">
-                            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" @onclick=@addContact class="btn btn-primary"> Save</button>
-                        </div>
-                    </EditForm>
+                    </div>
                 </div>
-            </div>
-        </div>
+            }
+        }
     </div>
 }
 
@@ -88,24 +93,39 @@ else{
     private List<Contact>? contacts;
     private Contact newcontact = new Contact("", "");
         
-    private bool @isDisabled = false;
-    private Contact? selectedContact;
+    private bool isDisabled = false;
+    private Contact selectedContact;
+
+    private bool isOpenModal = false;
 
     private void onSelected (Contact cnt){
         selectedContact = cnt;
     }
 
-    private void HandleValidSubmit(){
+    private void openModal(){
+        isOpenModal = !isOpenModal;
+    }
+    
+    private void DeleteContact(){
+        ContactService.DeleteContact(selectedContact);
+        selectedContact = null;
+    }
 
+    private void EdithContact(){
+        newcontact = selectedContact;
+        selectedContact = null;
+        openModal();
     }
-    private void addContact () {
+
+    private void HandleValidSubmit(){
         newcontact.Date = DateTime.Now;
-        if(string.IsNullOrEmpty(newcontact.Name)){
-        }else{
+        if(!string.IsNullOrEmpty(newcontact.Name)){
             ContactService.AddContact(newcontact);
+            newcontact = new Contact("", "");
+            openModal();
         }
-        newcontact = new Contact("","");
     }
+
     protected override async Task OnInitializedAsync()
     {
         contacts = await ContactService.GetAllContacts();

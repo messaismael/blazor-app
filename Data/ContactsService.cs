@@ -21,7 +21,7 @@ public class ContactsService
 
     public void DeleteContact(Contact cnt)
     {
-
+        AllContacts.Remove(cnt);
     }
 
     public void UpdateContact(Contact cnt)
@@ -29,6 +29,9 @@ public class ContactsService
 
     }
 
+    private int findIndex (string name){
+        return AllContacts.FindIndex(a => a.Name == name);
+    }
     public Task<List<Contact>> GetAllContacts() {
         return Task.FromResult(AllContacts);
     }
